@@ -14,7 +14,10 @@ if (chosenClass) {
     let studentIds = db.classes[chosenClass].studentIds;
     
     if (studentIds.length > 0) {
-        // Pull student names using their IDs and sort them alphabetically
+        // FIXED: Added total count check directly into your active checklist printout
+        let totalCount = studentIds.length;
+        tR += `👥 **Total Registered Students:** ${totalCount}\n\n`;
+        //
         let studentNames = studentIds.map(id => db.students[id].name).sort();
         let checklist = studentNames
             .map(name => `- [ ] ${name} (student:: ${name}) (class:: ${chosenClass})`)
