@@ -11,7 +11,7 @@ let classes = Object.keys(db.classes || {}).sort();
 let chosenClass = await tp.system.suggester(classes, classes);
 if (!chosenClass) return;
 
-// FIXED: Safely access the Dataview API inside Templater
+// Safely access the Dataview API inside Templater
 const dR = app.plugins.plugins.dataview?.api;
 if (!dR) {
     new Notice("Dataview plugin is not activated!"); return;
@@ -55,10 +55,21 @@ let studentNames = studentIds.map(id => db.students[id].name).sort();
 tR += `# 🎓 Academic Report Cards: ${chosenClass}\n`;
 tR += `🏫 **Institution:** ${db.classes[chosenClass].university} | 🗓️ **Term Ending:** ${tp.date.now("MMMM YYYY")}\n\n---\n\n`;
 
+// Define placeholder labels to intercept matching placeholder records
+const bypassLabels = ["na", "n/a", "none", "no email", "not applicable"];
+
 for (let name of studentNames) {
     // Find student details from our relational global records
     let studentId = Object.keys(db.students).find(id => db.students[id].name === name);
-    let email = db.students[studentId]?.email || "N/A";
+    let rawEmail = db.students[studentId]?.email ? db.students[studentId].email.trim() : "N/A";
+    let emailDisplay = "";
+
+    // FIXED: Evaluate if email matches an NA token block string
+    if (bypassLabels.includes(rawEmail.toLowerCase())) {
+        emailDisplay = `*${rawEmail.toUpperCase()}*`;
+    } else {
+        emailDisplay = rawEmail;
+    }
     
     // Calculations
     let attended = attendanceData[name] || 0;
@@ -72,9 +83,9 @@ for (let name of studentNames) {
     let activityBadge = activityRate >= 70 ? "✅" : "❌ INCOMPLETE (Below 70%)";
 
     // Markdown Report Card Format
-    tR += `## 👤 ${name}\n`;
+    tR += `## 👤 Student: ${name}\n`;
     tR += `* **Enrollment ID:** \`${studentId}\`\n`;
-    tR += `* **Email:** ${email}\n\n`;
+    tR += `* **Email:** ${emailDisplay}\n\n`; // FIXED: Outputs formatted placeholder or raw email address
     tR += `### 📈 Summary\n`;
     tR += `| Metric | Progress | Percentage | Status |\n`;
     tR += `| --- | --- | --- | --- |\n`;

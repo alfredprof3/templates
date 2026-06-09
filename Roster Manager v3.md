@@ -1,5 +1,5 @@
 <%*
-const storagePath = "Attendance-Rosters.json";
+const storagePath = "Student-Rosters.json";
 let db = { students: {}, classes: {} };
 
 if (await tp.file.exists(storagePath)) {
@@ -125,7 +125,7 @@ if (mode === "edit_info") {
     
     while (adding) {
         let subMode = await tp.system.suggester(
-            ["👥 Add student from Global Database", "🆕 Register a completely brand new student", "🛑 Done managing student list"],
+            ["👥 Add student from Global Database", "🆕 Register a completely brand new student", "✅ Done managing student list"],
             ["global", "brand_new", "done"]
         );
         
@@ -184,7 +184,7 @@ if (mode === "edit_info") {
             if (!sName) continue;
             sName = sName.trim();
             
-            // FIXED: Scan database for duplicate names
+            // Scan database for duplicate names
             let existingWithSameName = Object.keys(db.students).find(id => db.students[id].name.toLowerCase() === sName.toLowerCase());
             if (existingWithSameName) {
                 new Notice(`⚠️ WARNING: A student named '${sName}' is already registered with ID: ${existingWithSameName}`);
@@ -203,15 +203,21 @@ if (mode === "edit_info") {
                 }
             }
             
-            let sEmail = await tp.system.prompt("Enter Student Email:");
+            let sEmail = await tp.system.prompt("Enter Student Email (or type NA if none):");
             if (!sEmail) continue;
             sEmail = sEmail.trim();
             
-            // FIXED: Scan database for duplicate emails
-            let existingWithSameEmail = Object.keys(db.students).find(id => db.students[id].email.toLowerCase() === sEmail.toLowerCase());
-            if (existingWithSameEmail) {
-                new Notice(`⚠️ WARNING: The email '${sEmail}' is already assigned to ${db.students[existingWithSameEmail].name}`);
-                let choiceEmail = await tp.system.suggester([`🔗 Link existing student (${db.students[existingWithSameEmail].name}) to this class`, `❌ Cancel and re-enter`],  
+            // FIXED: Define non-applicable placeholder labels
+            const bypassLabels = ["na", "n/a", "none", "no email", "not applicable"];
+            const isBypassEmail = bypassLabels.includes(sEmail.toLowerCase());
+
+            // FIXED: Only scan for duplicate emails if it is NOT a bypass label
+            if (!isBypassEmail) {
+let existingWithSameEmail = Object.keys(db.students).find(id => db.students[id].email.toLowerCase() === sEmail.toLowerCase());  
+if (existingWithSameEmail) {  
+new Notice(`⚠️ WARNING: The email '${sEmail}' is already assigned to ${db.students[existingWithSameEmail].name}`);  
+let choiceEmail = await tp.system.suggester(  
+[`🔗 Link existing student (${db.students[existingWithSameEmail].name}) to this class`, `❌ Cancel and re-enter`],  
 ["link", "cancel"]  
 );  
 if (choiceEmail === "link") {  
@@ -225,9 +231,10 @@ continue;
 } else {  
 continue;  
 }  
+}  
 }
 
-// Save if entirely unique  
+// Save student profile  
 db.students[sId] = { name: sName, email: sEmail };  
 studentIds.push(sId);  
 new Notice(`Registered and added ${sName}.`);  
