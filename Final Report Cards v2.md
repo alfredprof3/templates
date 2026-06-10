@@ -83,7 +83,7 @@ for (let name of studentNames) {
     let activityBadge = activityRate >= 70 ? "✅" : "❌ INCOMPLETE (Below 70%)";
 
     // Markdown Report Card Format
-    tR += `## 👤 Student: ${name}\n`;
+    tR += `## 👤 ${name}\n`;
     tR += `* **Enrollment ID:** \`${studentId}\`\n`;
     tR += `* **Email:** ${emailDisplay}\n\n`; // FIXED: Outputs formatted placeholder or raw email address
     tR += `### 📈 Summary\n`;
