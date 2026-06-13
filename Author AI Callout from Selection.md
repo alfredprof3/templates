@@ -4,7 +4,7 @@
 let selection = tp.file.selection();
 
 // 2. Open the dropdown menu to select the callout mood/type
-let options = ["Gemini", "ChatGPT", "DeepSeek", "Copilot", "Qwen", "Claude"];
+let options = ["Prompt","Gemini", "ChatGPT", "DeepSeek", "Copilot", "Qwen", "Claude"];
 let chosenMood = await tp.system.suggester(options, options);
 
 // 3. Fallback if the user presses ESC or cancels the menu
