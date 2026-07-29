@@ -2,7 +2,7 @@
 <%*
 let selection = tp.file.selection();
 
-let options = ["You", "Claude", "ChatGPT", "Gemini", "DeepSeek", "Copilot", "Qwen", "AI Mode by Google"];
+let options = ["You", "Claude", "ChatGPT", "Gemini", "DeepSeek", "Copilot", "Qwen", "AI Mode by Google", "Duck Duck Go Search Assist"];
 let chosen = await tp.system.suggester(options, options);
 
 if (!chosen) {
