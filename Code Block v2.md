@@ -13,7 +13,8 @@ const langs = [
   "typescript",
   "yaml",
   "vim",
-  "nvim"
+  "nvim",
+  "latex"
 ];
 
 // 2. Prompt the user with a searchable dropdown list
