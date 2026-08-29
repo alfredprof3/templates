@@ -8,12 +8,13 @@ const langs = [
   "javascript",
   "json",
   "markdown",
+  "nvim",
   "python",
   "sql",
+  "toml",
   "typescript",
   "yaml",
   "vim",
-  "nvim",
   "latex"
 ];
 
